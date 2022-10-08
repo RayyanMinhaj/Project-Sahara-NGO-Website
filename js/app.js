@@ -34,22 +34,27 @@ async function sendReq() {
 		event.preventDefault()
 		const formData = new FormData(form)
 		const request = {
-			name: formData.get('name'),
-			email: formData.get('email'),
-			checker,
-			description: formData.get('message')
+			Name: formData.get('name'),
+			Email: formData.get('email'),
+			Type: checker,
+			Desc: formData.get('message')
 		};
 		console.log(request)
 		client
 			.from('Requests')
-			.insert([
-				request
-			]).then(() => {
-				console.log('Request sent')
+			.insert(request)
+			.then((response) => {
+				console.log(response)
 			})
 	})
 
-
+	// for debugging purposes
+	// const { data, error } = await client
+	// 	.from('Requests')
+	// 	.insert([
+	// 		{ Name: 'Ayihan', Email: 'ayihanhaq@gmail.com', Type: 'Rashan', Desc: "I need help" },
+	// 	])
+	// 	console.log(data, error)
 }
 
 sendReq()
