@@ -16,6 +16,20 @@ async function logUser(obj) {
 	console.log(data, error)
 }
 
+async function signupUserSupabase(obj) {
+	let { user, error } = await client.auth.signUp({
+		email: obj.Email, password: obj.Password
+	})
+	if (error) {
+		console.log(obj.password)
+		alert(error.message)
+		console.log(error)
+	}
+	else {
+		console.log(user)
+	}
+}
+
 async function signup() {
 	form.addEventListener("submit", (event) => {
 		event.preventDefault()
@@ -57,8 +71,13 @@ async function signup() {
 				DOB: DOB,
 				Role: position
 			}
+			const supaUser = {
+				Email: email,
+				Password: password
+			}
 			console.log(filler)
 			logUser(filler)
+			signupUserSupabase(supaUser)
 			setTimeout(() => {
 				window.location.href = "login.html"
 			}, 2000)
