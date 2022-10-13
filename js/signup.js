@@ -14,6 +14,28 @@ async function logUser(obj) {
 		.from('Users')
 		.insert(obj)
 	console.log(data, error)
+
+	specialization(obj)
+}
+
+function specialization(obj) {
+	client
+		.from('Users')
+		.select('id')
+		.order('id', { ascending: false })
+		.limit(1)
+		.then((response) => {
+			if (obj.Role == "Donor") {
+				const id = response.data[0].id
+				client
+					.from('Donors')
+					.insert([{ id: id }])
+					.then((response) => {
+						console.log(response)
+					})
+			}
+		}
+		)
 }
 
 async function signupUserSupabase(obj) {
@@ -35,7 +57,8 @@ async function signup() {
 		event.preventDefault()
 		const formData = new FormData(form)
 		const email = formData.get("email")
-		// check if email is already in database
+
+
 		client
 			.from('Users')
 			.select('Email')
@@ -43,12 +66,14 @@ async function signup() {
 			.then((response) => {
 				if (response.data.length > 0) {
 					alert("Email already exists")
-					// redirect to login page after 5 seconds
 					setTimeout(() => {
 						window.location.href = "login.html"
-					}, 1000)
+					}, 3000)
+					return
 				}
 			})
+
+
 		const password = formData.get("password")
 		const password2 = formData.get("password2")
 		const Fname = formData.get("first_name")
@@ -63,6 +88,7 @@ async function signup() {
 		const position = formData.get("subject")
 		if (password == password2) {
 			const filler = {
+				// id : 0,				Enable when need to reset counter!
 				First_Name: Fname,
 				Last_Name: Lname,
 				Email: email,
@@ -76,11 +102,15 @@ async function signup() {
 				Password: password
 			}
 			console.log(filler)
-			logUser(filler)
 			signupUserSupabase(supaUser)
+			logUser(filler)
+
+
 			setTimeout(() => {
 				window.location.href = "login.html"
-			}, 2000)
+			}, 3000)
+
+
 		}
 		else {
 			alert("Passwords do not match")
