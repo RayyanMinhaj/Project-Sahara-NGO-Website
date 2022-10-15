@@ -34,8 +34,50 @@ function specialization(obj) {
 						console.log(response)
 					})
 			}
-		}
-		)
+			else {
+				const id = response.data[0].id
+				client
+					.from('Volunteers')
+					.insert([{ id: id }])
+					.then((response) => {
+						// volunteersSpecial(obj, id)
+						console.log(response)
+					})
+			}
+		})
+}
+
+function volunteersSpecial(obj, userId) {
+	// get the most recently added Vol_id from Volunteers table
+	// client
+	// 	.from('Volunteers')
+	// 	.select('Vol_id')
+	// 	.order('Vol_id', { ascending: false })
+	// 	.limit(1)
+	// 	.then((response) => {
+	// 		if (obj.Role == "Medical_Vol") {
+	// 			// insert Vol_id into Medical_Vol table
+	// 			const Vol_id = response.data[0].Vol_id
+	// 			client
+	// 				.from('Medical_Vol')
+	// 				.insert([{ Vol_id: Vol_id}])
+	// 				.then((response) => {
+	// 					console.log(response)
+	// 				})
+	// 		}
+	// 	})
+
+	// check if a table named Volunteer exists in the database
+	client
+		.from("Volunteers")
+		.select('*')
+		.then((response) => {
+			// if it exists print the response
+			console.log(response)
+		})
+		.catch((error) => {
+			console.log(error)
+		})
 }
 
 async function signupUserSupabase(obj) {
