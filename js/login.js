@@ -57,36 +57,47 @@ function logIn() {
 }
 
 function donorPage(obj) {
+	console.log(obj)
 	const welcome = document.getElementById('welcome')
 	const displayEmail = document.getElementById('email')
 	const displayName = document.getElementById('name')
 	const displayAmount = document.getElementById('amountdonated')
 	const displayPoints = document.getElementById('points')
 	client
-	.from('Users')
-	.select('id,First_Name , Last_Name')
-	.eq('Email', obj.email)
-	.then((response) => {
-		welcome.innerHTML = "Welcome " + response.data[0].First_Name.charAt(0).toUpperCase() + response.data[0].First_Name.slice(1),
-		displayName.innerHTML = `Name: ${response.data[0].First_Name} ${response.data[0].Last_Name}`,
-		displayEmail.innerHTML = `Email: ${obj.email}`
-		
-		client
-		.from('Donors')
-		.select('amount_donated,points')
-		.eq('id', response.data[0].id)
-			.then((response) => {
+		.from('Users')
+		.select('id,First_Name , Last_Name')
+		.eq('Email', obj.email)
+		.then((response) => {
+			welcome.innerHTML = "Welcome " + response.data[0].First_Name.charAt(0).toUpperCase() + response.data[0].First_Name.slice(1),
+				displayName.innerHTML = `Name: ${response.data[0].First_Name} ${response.data[0].Last_Name}`,
+				displayEmail.innerHTML = `Email: ${obj.email}`
+
+			client
+				.from('Donors')
+				.select('amount_donated,points')
+				.eq('id', response.data[0].id)
+				.then((response) => {
 					displayAmount.innerHTML = `Amount Donated: $${response.data[0].amount_donated}`,
-					displayPoints.innerHTML = `Points: ${response.data[0].points}`
+						displayPoints.innerHTML = `Points: ${response.data[0].points}`
 				})
 		})
+
+}
+
+
+const logoutBtn = document.getElementById('logout')
+
+function logOut() {
+	logoutBtn.addEventListener("click", (event) => {
+		event.preventDefault()
+		client.auth.signOut()
+	})
 	
 }
 
 if (window.location.href.includes('login.html')) {
 	logIn()
 }
-
 if (window.location.href.includes('donorpage.html')) {
 	client.auth.onAuthStateChange((event, session) => {
 		if (session) {
