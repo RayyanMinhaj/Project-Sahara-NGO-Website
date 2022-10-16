@@ -10,7 +10,7 @@ function init() {
 const form = document.querySelector('form')
 
 async function editdonor(obj) {
-	client
+	await client
 		.from('Users')
 		.select('id')
 		.eq('Email', obj.Email)
@@ -51,7 +51,7 @@ async function editdonor(obj) {
 }
 
 async function donation(obj) {
-	client
+	await client
 		.from('Donation')
 		.insert([{
 			donor_id: obj.donor_id,
