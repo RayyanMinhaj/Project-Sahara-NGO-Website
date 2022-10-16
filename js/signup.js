@@ -18,8 +18,8 @@ async function logUser(obj) {
 	specialization(obj)
 }
 
-function specialization(obj) {
-	client
+async function specialization(obj) {
+	await client
 		.from('Users')
 		.select('id')
 		.order('id', { ascending: false })
@@ -80,7 +80,7 @@ function volunteersSpecial(obj, userId) {
 		})
 }
 
-async function signupUserSupabase(obj) {
+async function signupUserSupabase(obj, filler) {
 	let { user, error } = await client.auth.signUp({
 		email: obj.Email, password: obj.Password
 	})
@@ -101,21 +101,6 @@ async function signup() {
 		const email = formData.get("email")
 
 
-		client
-			.from('Users')
-			.select('Email')
-			.eq('Email', email)
-			.then((response) => {
-				if (response.data.length > 0) {
-					alert("Email already exists")
-					setTimeout(() => {
-						window.location.href = "login.html"
-					}, 3000)
-					return
-				}
-			})
-
-
 		const password = formData.get("password")
 		const password2 = formData.get("password2")
 		const Fname = formData.get("first_name")
@@ -128,6 +113,22 @@ async function signup() {
 		} else { gender = "Female" }
 		const phone = formData.get("phone")
 		const position = formData.get("subject")
+
+		client
+			.from('Users')
+			.select('Email')
+			.eq('Email', email)
+			.then((response) => {
+				if (response.data.length > 0) {
+					alert("Email already exists")
+					setTimeout(() => {
+						window.location.href = "login.html"
+					}, 3000)
+					// end signup function execution
+					return false
+				}
+			})
+
 		if (password == password2) {
 			const filler = {
 				// id : 0,				Enable when need to reset counter!
@@ -144,8 +145,8 @@ async function signup() {
 				Password: password
 			}
 			console.log(filler)
-			signupUserSupabase(supaUser)
 			logUser(filler)
+			signupUserSupabase(supaUser)
 
 
 			setTimeout(() => {
