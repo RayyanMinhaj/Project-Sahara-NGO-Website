@@ -10,19 +10,16 @@ function init() {
 const form = document.querySelector('form')
 
 async function editdonor(obj) {
-	// select the id from the Users table where email = obj.email.
 	client
 		.from('Users')
 		.select('id')
 		.eq('Email', obj.Email)
 		.then((response) => {
-			// select the donor_id from the Donors table where id = id from the Users table.
 			client
 				.from('Donors')
 				.select('donor_id, amount_donated, points')
 				.eq('id', response.data[0].id)
 				.then((response) => {
-					// add obj.amount to the amount_donated column from the Donors table.
 					obj.amount_donated = response.data[0].amount_donated
 					obj.pointsearned = response.data[0].points
 					obj.donor_id = response.data[0].donor_id
@@ -32,7 +29,6 @@ async function editdonor(obj) {
 						.eq('donor_id', response.data[0].donor_id)
 						.then((response) => {
 							console.log(response)
-							// add donor_id to the obj
 							donation(obj)
 						})
 				})
@@ -40,7 +36,6 @@ async function editdonor(obj) {
 }
 
 function donation(obj) {
-	// add the donation to the Donations table where donor_id = obj.donor_id
 	client
 		.from('Donation')
 		.insert([{
@@ -64,16 +59,13 @@ async function donate() {
 		const type = formData.get('type')
 		const email = formData.get('email')
 
-		// check if email exists in the Users table
 		client
 			.from('Users')
 			.select('id')
 			.eq('Email', email)
 			.then((response) => {
-				// if the email does not exist, alert the user
 				if (response.data.length === 0) {
 					alert('Email does not exist')
-					// clear email field
 					document.getElementById('email').value = ''
 					return
 				}
@@ -88,7 +80,6 @@ async function donate() {
 
 		editdonor(obj)
 
-		// change the text of the submit button to 'Processing...' and then to Thanks for donating! after 2 seconds
 
 		alert('Thanks for donating!')
 
