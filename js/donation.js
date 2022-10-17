@@ -10,7 +10,7 @@ function init() {
 const form = document.querySelector('form')
 
 async function editdonor(obj) {
-	client
+	await client
 		.from('Users')
 		.select('id')
 		.eq('Email', obj.Email)
@@ -28,15 +28,30 @@ async function editdonor(obj) {
 						.update({ amount_donated: parseInt(obj.amount_donated) + parseInt(obj.amount), points: parseInt(obj.pointsearned) + parseInt(obj.amount) * 50 })
 						.eq('donor_id', response.data[0].donor_id)
 						.then((response) => {
-							console.log(response)
 							donation(obj)
+							// wait for donation to be inserted
+							setTimeout(() => {
+								// change submit-btn to "Processing Payment"
+								document.getElementById('submit-btn').innerHTML = "Processing Payment"
+								// wait for 3 seconds
+								setTimeout(() => {
+									// change submit-btn to "Payment Successful"
+									document.getElementById('submit-btn').innerHTML = "Payment Successful"
+								}, 3000)
+							}, 1000)
+							console.log(response)
 						})
 				})
+			
+			// redirect to donorpage.html
+			setTimeout(() => {
+				window.location.href = "donorpage.html"
+			}, 8000)
 		})
 }
 
-function donation(obj) {
-	client
+async function donation(obj) {
+	await client
 		.from('Donation')
 		.insert([{
 			donor_id: obj.donor_id,
@@ -80,12 +95,9 @@ async function donate() {
 
 		editdonor(obj)
 
-
-		alert('Thanks for donating!')
-
-		setTimeout(() => {
-			window.location.href = 'donorpage.html'
-		}, 1000)
+		// setTimeout(() => {
+		// 	window.location.href = 'donorpage.html'
+		// }, 1000)
 	})
 }
 
