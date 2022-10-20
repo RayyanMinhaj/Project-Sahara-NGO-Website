@@ -42,6 +42,13 @@ async function sendReq() {
 	})
 
 
+	// to clear all the tables and feild
+	// let { data, error } = await client
+	// 	.rpc('ClearTables')
+	// if (error) console.error(error)
+	// else console.log(data)
+
+
 	// for debugging purposes
 	// const { data, error } = await client
 	// 	.from('Requests')
