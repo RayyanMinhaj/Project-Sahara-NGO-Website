@@ -79,9 +79,9 @@
 						<a class="nav-link click-scroll" href="signup.html">Sign Up</a>
 					</li> -->
 
-					<li class="nav-item">
+					<!-- <li class="nav-item">
 						<a class="nav-link click-scroll" onclick="logOut()" href="index.html">Logout</a>
-					</li>
+					</li> -->
 				</ul>
 
 				<div class="d-lg-flex align-items-center d-none ms-auto">
@@ -120,15 +120,15 @@
 							<br>
 							<h2 class="mb-4" class="request" id="request">Active Requests:</h2>
 							<br>
-							<div style="white-space: nowrap; overflow-x: auto">
+								<div style="white-space: nowrap;overflow-x:auto">
 								<p class="mb-4" style="display: inline-block;"><a class="custom-btn btn custom-link"
 										href="donation.html">Change Field</a></p>
 								<p class="mb-4" style="display: inline-block;"><a class="custom-btn btn custom-link"
 										href="#section_2">Edit Credentials</a></p>
 								<p class="mb-4" style="display: inline-block;"><a class="custom-btn btn custom-link"
 										href="signup.html">View Acive Requests</a></p>
-								<p class="mb-4" style="display: inline-block;"><a
-										class="custom-btn btn custom-link" href="index.html">Log Out</a></p>
+								<p class="mb-4" style="display: inline-block;" id="logout-btn" onclick="logOut()"><a
+										class="custom-btn btn custom-link">Log Out</a></p>
 							</div>
 						</div>
 					</div>
