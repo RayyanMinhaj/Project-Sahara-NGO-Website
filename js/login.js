@@ -18,9 +18,7 @@ async function supabaseLogin(obj) {
 			if (response.error == null) {
 				const button = document.getElementById('submit-btn')
 				button.innerHTML = 'Logging In'
-				setTimeout(() => {
-					window.location.href = "donorpage.html"
-				}, 3000)
+				redirect(obj)
 			}
 
 			else {
@@ -29,6 +27,26 @@ async function supabaseLogin(obj) {
 			}
 		})
 }
+
+async function redirect(obj) {
+	await client
+		.from('Users')
+		.select('Role')
+		.eq('Email', obj.email)
+		.then((response) => {
+			if (response.data[0].Role === "Donor") {
+				window.location.href = "donorpage.html"
+			}
+			else if(response.data[0].Role === "Admin") {
+				window.location.href = "admin.html"
+			}
+			else {
+				window.location.href = "volunteerpage.html"
+			}
+		}
+	)
+}
+
 
 function logIn() {
 	form.addEventListener("submit", (event) => {
@@ -84,15 +102,49 @@ function donorPage(obj) {
 
 }
 
+function volunteerPage(obj) {
+	console.log(obj)
+	const welcome = document.getElementById('welcome')
+	const displayEmail = document.getElementById('email')
+	const displayName = document.getElementById('name')
+	const displaySpecialization = document.getElementById('specialization')
+	const displayRequest = document.getElementById('request')
+	client
+		.from('Users')
+		.select('id,First_Name , Last_Name')
+		.eq('Email', obj.email)
+		.then((response) => {
+			welcome.innerHTML = "Welcome " + response.data[0].First_Name.charAt(0).toUpperCase() + response.data[0].First_Name.slice(1),
+				displayName.innerHTML = `Name: ${response.data[0].First_Name} ${response.data[0].Last_Name}`,
+				displayEmail.innerHTML = `Email: ${obj.email}`
 
-const logoutBtn = document.getElementById('logout')
+			client
+				.from('Volunteers')
+				.select('Duty, Department')
+				.eq('id', response.data[0].id)
+				.then((response) => {
+					console.log(response)
+					displaySpecialization.innerHTML = `Specialization: ${response.data[0].Department}`
+					// console.log(response.data[0].Duty)
+					if (response.data[0].Duty !== null) {
+						displayRequest.innerHTML = `Request: ${response.data[0].Duty}`
+					}
+					else {
+						displayRequest.innerHTML = `Request: None`
+					}
+				})
+		})
+}
+
+
+const logoutBtn = document.getElementById('logout-btn')
+// logoutBtn.addEventListener('click', logOut)
 
 function logOut() {
-	logoutBtn.addEventListener("click", (event) => {
-		event.preventDefault()
-		client.auth.signOut()
-	})
-	
+	client.auth.signOut()
+		.then(() => {
+			window.location.href = "index.html"
+		})
 }
 
 if (window.location.href.includes('login.html')) {
@@ -102,6 +154,13 @@ if (window.location.href.includes('donorpage.html')) {
 	client.auth.onAuthStateChange((event, session) => {
 		if (session) {
 			donorPage(session.user)
+		}
+	})
+}
+if (window.location.href.includes('volunteerpage.html')) {
+	client.auth.onAuthStateChange((event, session) => {
+		if (session) {
+			volunteerPage(session.user)
 		}
 	})
 }
