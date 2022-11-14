@@ -1,45 +1,214 @@
-const buttonsDiv = document.getElementById('buttons-div');
-const changeButton = document.getElementById('change-btn')
-const emailVol = document.getElementById('email');
-changeButton.addEventListener('click', changeField);
+const supa = init();
 
-async function changeField() {
-	buttonsDiv.innerHTML =
-		'<div class="hero-body">'
-		+ '<div class="container is-fluid">'
-		+ '<div class="columns is-centered">'
-		+ '<div class="column is-half">'
-		+ '<div class="box">'
-		+ '<div style="overflow-x:auto">'
-		+ '<p class="mb-4" style="display: inline-block;id="legal"> <a class="custom-btn btn custom-link">Legal Aid</a></p>'
-		+ '<p class="mb-4" style="display: inline-block;id="medical"><a class="custom-btn btn custom-link" href="#section_2">Medical Volunteer</a></p>'
-		+ '<p class="mb-4" style="display: inline-block;id="Finance"><a class="custom-btn btn custom-link" href="#section_3">Finance Managment</a></p>'
-		+ '<p class="mb-4" style="display: inline-block;id="education"><a class="custom-btn btn custom-link" href="#section_4">Educational Volunteer</a></p>'
-		+ '<p class="mb-4" style="display: inline-block;id="media"><a class="custom-btn btn custom-link" href="#section_5">Media Managment</a></p>'
-		+ '</div>'
-		+ '</div>'
-		+ '</div>'
-		+ '</div>'
-		+ '</div>';
-
-	selectField = await selectField();
+function init() {
+	return supabase.createClient(
+		'https://zjesbzduygemrdprcvvq.supabase.co',
+		'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpqZXNiemR1eWdlbXJkcHJjdnZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjQ5OTUyNDMsImV4cCI6MTk4MDU3MTI0M30.wtkQQpQMKYsjYyxG8PA4bcGY5OHEcVaywHuAYoIQLh0'
+	);
 }
 
-async function selectField() {
-	const email = emailVol.innerText.substring(7);
-	console.log(email);
-	client
+function changeField() {
+	document.getElementById('change-btn').addEventListener('click', (event) => {
+		event.preventDefault()
+		window.location.href = 'volunteerchanges.html'
+	})
+	return
+}
+
+function addVolunteerTable(volId, obj) {
+	if (obj.department === "Medical Volunteer") {
+		supa
+			.from('Medical_Vol')
+			.insert([
+				{
+					'Vol_id': volId
+				}
+			])
+			.then((response) => {
+				console.log(response)
+			})
+	} else if (obj.department === "Finance Management") {
+		supa
+			.from('Finance_Vol')
+			.insert([
+				{
+					'Vol_id': volId
+				}
+			])
+			.then((response) => {
+				console.log(response)
+			})
+	} else if (obj.department === "Educational Volunteer") {
+		supa
+			.from('Educational_Vol')
+			.insert([
+				{
+					'Vol_id': volId
+				}
+			])
+			.then((response) => {
+				console.log(response)
+			})
+	} else if (obj.department === "Legal Aid Services") {
+		console.log("Here 2")
+
+		supa
+			.from('Legal_Vol')
+			.insert([
+				{
+					'Vol_id': volId
+				}
+			])
+			.then((response) => {
+				console.log(response)
+			})
+	} else if (obj.department === "Media Management") {
+		supa
+			.from('MediaMan_Vol')
+			.insert([
+				{
+					'Vol_id': volId
+				}
+			])
+			.then((response) => {
+				console.log(response)
+			})
+	}
+}
+
+function changeTable(obj) {
+	supa
+		// update the Role in Users table to obj.department with the same email and select id from Users table and store it in id
 		.from('Users')
-		.select('id, Role')
-		.eq('Email', email)
-		.then(response => {
-			const id = response.data[0].id;
-			client
+		.update({ Role: obj.department })
+		.eq('Email', obj.email)
+		.select('id')
+		.then((response) => {
+			let id = response.data[0].id
+			supa
 				.from('Volunteers')
-				.select('id, Department')
+				.update({ Department: obj.department })
 				.eq('id', id)
-				.then(response => {
-					console.log(response.data[0].Department)
+				.select('Vol_id')
+				.then((response) => {
+					let volId = response.data[0].Vol_id
+					if (obj.currentDepartment === "Medical Volunteer") {
+						supa
+							console.log("deleting from medical")
+							.from('Medical_Vol')
+							.delete()
+							.eq('Vol_id', volId)
+							.then((response) => {
+								console.log("Here 1")
+								addVolunteerTable(volId, obj)
+							})
+					} else if (obj.currentDepartment === "Finance Management") {
+						supa
+							console.log("deleting from finance")
+							.from('Finance_Vol')
+							.delete()
+							.eq('Vol_id', volId)
+							.then((response) => {
+								addVolunteerTable(volId, obj)
+							})
+					} else if (obj.currentDepartment === "Educational Volunteer") {
+						supa
+						.from('Educational_Vol')
+						.delete()
+						.eq('Vol_id', volId)
+						.then((response) => {
+							console.log("deleting from educational")
+							addVolunteerTable(volId, obj)
+							})
+					} else if (obj.currentDepartment === "Legal Aid Services") {
+						supa
+							console.log("deleting from legal")
+							.from('Legal_Vol')
+							.delete()
+							.eq('Vol_id', volId)
+							.then((response) => {
+								addVolunteerTable(volId, obj)
+							})
+					} else if (obj.currentDepartment === "Media Management") {
+						supa
+							console.log("deleting from media")
+							.from('MediaMan_Vol')
+							.delete()
+							.eq('Vol_id', volId)
+							.then((response) => {
+								addVolunteerTable(volId, obj)
+							})
+					}
 				})
 		})
+}
+
+function checkData() {
+	document.getElementById('apply-btn').addEventListener('click', (event) => {
+		event.preventDefault()
+		const email = document.getElementById("emailver")
+		const password = document.getElementById("passver")
+		const department = document.getElementById("department")
+		let obj = {
+			email: email.value,
+			// password: password.value,
+			department: department.options[department.selectedIndex].value,
+			currentDepartment: ""
+		}
+		supa
+			.from('Users')
+			.select('Email')
+			.eq('Email', email.value)
+			.then((response) => {
+				if (response.data.length == 0) {
+					alert("Email does not exist. Please try again")
+					document.getElementById("emailver").value = ""
+					document.getElementById("passver").value = ""
+				}
+				else {
+					supa.auth.signInWithPassword({
+						email: email.value,
+						password: password.value
+					})
+						.then((response) => {
+							supa
+								.from('Users')
+								.select('Role')
+								.eq('Email', email.value)
+								.then((response) => {
+									// currentDepartment = response.data[0].Role
+									// console.log(currentDepartment)
+									obj.currentDepartment = response.data[0].Role
+									console.log(obj.currentDepartment)
+								})
+
+							if (response.error == null) {
+								const button = document.getElementById('apply-btn')
+								button.innerHTML = 'Submitting Request'
+								changeTable(obj)
+								setTimeout(() => {
+									button.innerHTML = 'Apply'
+									alert("Request Submitted")
+									window.location.href = "volunteerpage.html"
+								}, 3000)
+								console.log(currentDepartment)
+							}
+
+							else {
+								alert("Incorrect password. Please try again")
+								console.log(response)
+								document.getElementById("pass").value = ""
+							}
+						})
+				}
+			})
+	})
+}
+
+if (window.location.href.includes('volunteerPage.html')) {
+	changeField()
+}
+
+if (window.location.href.includes('volunteerchanges.html')) {
+	checkData()
 }
