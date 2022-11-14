@@ -94,48 +94,52 @@ function changeTable(obj) {
 					let volId = response.data[0].Vol_id
 					if (obj.currentDepartment === "Medical Volunteer") {
 						supa
-							console.log("deleting from medical")
 							.from('Medical_Vol')
 							.delete()
 							.eq('Vol_id', volId)
 							.then((response) => {
-								console.log("Here 1")
+								console.log(response)
+								console.log("deleting from medical")
 								addVolunteerTable(volId, obj)
 							})
 					} else if (obj.currentDepartment === "Finance Management") {
 						supa
-							console.log("deleting from finance")
 							.from('Finance_Vol')
 							.delete()
 							.eq('Vol_id', volId)
 							.then((response) => {
+								console.log(response)
+								console.log("deleting from finance")
 								addVolunteerTable(volId, obj)
 							})
 					} else if (obj.currentDepartment === "Educational Volunteer") {
 						supa
-						.from('Educational_Vol')
-						.delete()
-						.eq('Vol_id', volId)
-						.then((response) => {
-							console.log("deleting from educational")
-							addVolunteerTable(volId, obj)
+							.from('Educational_Vol')
+							.delete()
+							.eq('Vol_id', volId)
+							.then((response) => {
+								console.log(response)
+								console.log("deleting from educational")
+								addVolunteerTable(volId, obj)
 							})
 					} else if (obj.currentDepartment === "Legal Aid Services") {
 						supa
-							console.log("deleting from legal")
 							.from('Legal_Vol')
 							.delete()
 							.eq('Vol_id', volId)
 							.then((response) => {
+								console.log(response)
+								console.log("deleting from legal")
 								addVolunteerTable(volId, obj)
 							})
 					} else if (obj.currentDepartment === "Media Management") {
 						supa
-							console.log("deleting from media")
 							.from('MediaMan_Vol')
 							.delete()
 							.eq('Vol_id', volId)
 							.then((response) => {
+								console.log(response)
+								console.log("deleting from media")
 								addVolunteerTable(volId, obj)
 							})
 					}
@@ -191,7 +195,7 @@ function checkData() {
 									alert("Request Submitted")
 									window.location.href = "volunteerpage.html"
 								}, 3000)
-								console.log(currentDepartment)
+								// console.log(currentDepartment)
 							}
 
 							else {
