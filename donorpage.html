@@ -78,10 +78,10 @@
 					<li class="nav-item">
 						<a class="nav-link click-scroll" href="signup.html">Sign Up</a>
 					</li> -->
-
+					<!-- 
 					<li class="nav-item" id="logout-btn">
 						<a class="nav-link click-scroll" href="index.html">Logout</a>
-					</li>
+					</li> -->
 				</ul>
 
 				<div class="d-lg-flex align-items-center d-none ms-auto">
@@ -123,12 +123,15 @@
 							<div style="white-space: nowrap;overflow-x:auto">
 								<p class="mb-4" style="display: inline-block;"><a class="custom-btn btn custom-link"
 										href="donation.html">DONATE</a></p>
-								<p class="mb-4" style="display: inline-block;"><a class="custom-btn btn custom-link"
-										href="#section_2">Edit Credentials</a></p>
+								<p class="mb-4" style="display: inline-block;">
+									<button class="custom-btn btn custom-link" onclick="editCredentials()">Edit
+										Credentials</button>
+									<!-- <div id="editpopup"></div> -->
+								</p>
 								<p class="mb-4" style="display: inline-block;"><a class="custom-btn btn custom-link"
 										href="signup.html">Volunteer?</a></p>
-								<p class="mb-4" style="display: inline-block;"><a
-										class="custom-btn btn custom-link">Redeem Points</a></p>
+								<p class="mb-4" style="display: inline-block;">
+									<a class="custom-btn btn custom-link" href="points.html">Redeem Points</a></p>
 								<p class="mb-4" style="display: inline-block;" id="logout-btn" onclick="logOut()"><a
 										class="custom-btn btn custom-link">Log Out</a></p>
 							</div>
@@ -187,6 +190,7 @@
 	<script src="js/magnific-popup-options.js"></script>
 	<script src="js/custom.js"></script>
 	<script src="js/login.js"></script>
+	<script src="js/donor.js"></script>
 
 </body>
 

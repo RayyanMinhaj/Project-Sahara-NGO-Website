@@ -97,7 +97,8 @@
 
 	<main>
 
-		<section class="hero d-flex justify-content-center align-items-center" id="section_1" style="background-color:powderblue;">
+		<section class="hero d-flex justify-content-center align-items-center" id="section_1"
+			style="background-color:powderblue;">
 			<div class="container">
 				<div class="row">
 
@@ -105,11 +106,11 @@
 						<div class="hero-text">
 
 
-							<div class="hero-title-wrap d-flex align-items-center mb-4" >
+							<div class="hero-title-wrap d-flex align-items-center mb-4">
 								<img src="images/ProjectSaharaFinalLogo-removebg-preview.png"
 									class="avatar-image avatar-image-large img-fluid" alt="">
 
-								<h1 class="hero-title ms-3 mb-0" id="welcome" >Welcome **Medical** Staff</h1>
+								<h1 class="hero-title ms-3 mb-0" id="welcome">Welcome **Medical** Staff</h1>
 							</div>
 
 							<h2 class="mb-4" name="name" id="name">Name: </h2>
@@ -120,9 +121,9 @@
 							<br>
 							<h2 class="mb-4" class="request" id="request">Active Requests:</h2>
 							<br>
-								<div style="white-space: nowrap;overflow-x:auto">
-								<p class="mb-4" style="display: inline-block;"><a class="custom-btn btn custom-link"
-										href="donation.html">Change Field</a></p>
+							<div style="white-space: nowrap;overflow-x:auto" id="buttons-div">
+								<p class="mb-4" style="display: inline-block;" id="change-btn" onclick="changeField()"><a
+										class="custom-btn btn custom-link">Change Field</a></p>
 								<p class="mb-4" style="display: inline-block;"><a class="custom-btn btn custom-link"
 										href="#section_2">Edit Credentials</a></p>
 								<p class="mb-4" style="display: inline-block;"><a class="custom-btn btn custom-link"
@@ -135,18 +136,23 @@
 
 					<div class="col-lg-5 col-12 position-relative">
 
-						<img src="images/volunteer.png" class="hero-image img-fluid" 
-							alt="">
+						<img src="images/volunteer.png" class="hero-image img-fluid" alt="">
 					</div>
 
 				</div>
 			</div>
 
-			<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" width="1600" height="560" preserveAspectRatio="none" viewBox="0 0 1600 560">
+			<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink"
+				xmlns:svgjs="http://svgjs.com/svgjs" width="1600" height="560" preserveAspectRatio="none"
+				viewBox="0 0 1600 560">
 				<g mask="url(&quot;#SvgjsMask1052&quot;)" fill="none">
 					<rect width="1600" height="560" x="0" y="0" fill="#0e2a47"></rect>
-					<path d="M 0,68 C 23,141.4 69,414.8 115,435 C 161,455.2 184,165.2 230,169 C 276,172.8 299,436.8 345,454 C 391,471.2 414,249.4 460,255 C 506,260.6 529,487.2 575,482 C 621,476.8 644,254.2 690,229 C 736,203.8 759,365 805,356 C 851,347 874,149.2 920,184 C 966,218.8 989,533.6 1035,530 C 1081,526.4 1104,178.6 1150,166 C 1196,153.4 1219,486.2 1265,467 C 1311,447.8 1334,71.8 1380,70 C 1426,68.2 1451,459 1495,458 C 1539,457 1579,143.6 1600,65L1600 560L0 560z" fill="#184a7e"></path>
-					<path d="M 0,121 C 29.2,201.2 87.6,513 146,522 C 204.4,531 233.6,175.2 292,166 C 350.4,156.8 379.6,473.4 438,476 C 496.4,478.6 525.6,209.2 584,179 C 642.4,148.8 671.6,310.4 730,325 C 788.4,339.6 817.6,205 876,252 C 934.4,299 963.6,595.8 1022,560 C 1080.4,524.2 1109.6,85 1168,73 C 1226.4,61 1255.6,466.6 1314,500 C 1372.4,533.4 1402.8,230.8 1460,240 C 1517.2,249.2 1572,484.8 1600,546L1600 560L0 560z" fill="rgba(70, 197, 156, 1)"></path>
+					<path
+						d="M 0,68 C 23,141.4 69,414.8 115,435 C 161,455.2 184,165.2 230,169 C 276,172.8 299,436.8 345,454 C 391,471.2 414,249.4 460,255 C 506,260.6 529,487.2 575,482 C 621,476.8 644,254.2 690,229 C 736,203.8 759,365 805,356 C 851,347 874,149.2 920,184 C 966,218.8 989,533.6 1035,530 C 1081,526.4 1104,178.6 1150,166 C 1196,153.4 1219,486.2 1265,467 C 1311,447.8 1334,71.8 1380,70 C 1426,68.2 1451,459 1495,458 C 1539,457 1579,143.6 1600,65L1600 560L0 560z"
+						fill="#184a7e"></path>
+					<path
+						d="M 0,121 C 29.2,201.2 87.6,513 146,522 C 204.4,531 233.6,175.2 292,166 C 350.4,156.8 379.6,473.4 438,476 C 496.4,478.6 525.6,209.2 584,179 C 642.4,148.8 671.6,310.4 730,325 C 788.4,339.6 817.6,205 876,252 C 934.4,299 963.6,595.8 1022,560 C 1080.4,524.2 1109.6,85 1168,73 C 1226.4,61 1255.6,466.6 1314,500 C 1372.4,533.4 1402.8,230.8 1460,240 C 1517.2,249.2 1572,484.8 1600,546L1600 560L0 560z"
+						fill="rgba(70, 197, 156, 1)"></path>
 				</g>
 				<defs>
 					<mask id="SvgjsMask1052">
@@ -192,6 +198,7 @@
 	<script src="js/magnific-popup-options.js"></script>
 	<script src="js/custom.js"></script>
 	<script src="js/login.js"></script>
+	<script src="js/volunteer.js"></script>
 
 </body>
 

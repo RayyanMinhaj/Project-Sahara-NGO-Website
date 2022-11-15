@@ -29,13 +29,9 @@ async function editdonor(obj) {
 						.eq('donor_id', response.data[0].donor_id)
 						.then((response) => {
 							donation(obj)
-							// wait for donation to be inserted
 							setTimeout(() => {
-								// change submit-btn to "Processing Payment"
 								document.getElementById('submit-btn').innerHTML = "Processing Payment"
-								// wait for 3 seconds
 								setTimeout(() => {
-									// change submit-btn to "Payment Successful"
 									document.getElementById('submit-btn').innerHTML = "Payment Successful"
 								}, 3000)
 							}, 1000)
@@ -43,7 +39,6 @@ async function editdonor(obj) {
 						})
 				})
 			
-			// redirect to donorpage.html
 			setTimeout(() => {
 				window.location.href = "donorpage.html"
 			}, 8000)
