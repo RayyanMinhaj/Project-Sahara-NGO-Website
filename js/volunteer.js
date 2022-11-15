@@ -209,6 +209,41 @@ function checkData() {
 	})
 }
 
+function editCredentials() {
+		let currentPassword = prompt("Enter your current password", "password")
+		let newPassword = prompt("Enter your new password", "password")
+		let Email = document.getElementById('email').innerHTML
+		Email = Email.substring(7)
+		userEmail = Email
+	
+		updatePasswrod({ Email, newPassword, currentPassword })
+}
+
+async function updatePasswrod(obj) {
+	supa.auth.signInWithPassword({
+		email: obj.Email,
+		password: obj.currentPassword
+	})
+		.then((response) => {
+			if (response.error == null) {
+				supa.auth.updateUser({
+					email: obj.Email,
+					password: obj.newPassword
+				})
+					.then((response) => {
+						if (response.error == null) {
+							alert("Password updated successfully")
+						}
+						else {
+							alert("Password update failed")
+						}
+					})
+			} else {
+				alert("Incorrect password. Please try again")
+			}
+		})
+}
+
 if (window.location.href.includes('volunteerPage.html')) {
 	changeField()
 }
