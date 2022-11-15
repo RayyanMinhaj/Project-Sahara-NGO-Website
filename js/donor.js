@@ -7,7 +7,7 @@ function init() {
 	);
 }
 
-async function editCredentials() {
+function editCredentials() {
 	let currentPassword = prompt("Enter your current password", "password")
 	let newPassword = prompt("Enter your new password", "password")
 	let Email = document.getElementById('email').innerHTML
