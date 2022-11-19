@@ -51,7 +51,7 @@ async function redeemPoints() {
 			console.log(logEmail)
 			userEmail = logEmail
 		})
-	
+
 	console.log(userEmail)
 	let currentPoints = document.getElementById('currentpoints')
 	let userPoints = 0
@@ -98,6 +98,10 @@ async function redeemPoints() {
 							document.getElementById('currentpoints').innerHTML = "Current Points: " + userPoints + " points"
 						})
 				})
+
+			setTimeout(() => {
+				window.location.href = "donorpage.html"
+			}, 2000)
 		}
 	})
 
@@ -125,6 +129,10 @@ async function redeemPoints() {
 							document.getElementById('currentpoints').innerHTML = "Current Points: " + userPoints + " points"
 						})
 				})
+
+			setTimeout(() => {
+				window.location.href = "donorpage.html"
+			}, 2000)
 		}
 	})
 
@@ -152,6 +160,10 @@ async function redeemPoints() {
 							document.getElementById('currentpoints').innerHTML = "Current Points: " + userPoints + " points"
 						})
 				})
+
+			setTimeout(() => {
+				window.location.href = "donorpage.html"
+			}, 2000)
 		}
 	})
 
@@ -179,6 +191,10 @@ async function redeemPoints() {
 							document.getElementById('currentpoints').innerHTML = "Current Points: " + userPoints + " points"
 						})
 				})
+
+			setTimeout(() => {
+				window.location.href = "donorpage.html"
+			}, 2000)
 		}
 	})
 }
