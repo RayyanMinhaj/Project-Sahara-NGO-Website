@@ -1,4 +1,8 @@
 
-Add redeem points to donor page
+Add redeem points to donor page {cm:2022-11-15}
 Build admin page
 add functionality to the edit credentials page {cm:2022-11-15}
+edit credentials on volunteer {cm:2022-11-15}
+make  a page for volunteers to view active requests {cm:2022-11-19}
+https://www.w3schools.com/w3css/tryw3css_templates_analytics.htm admin page refrence
+fix active request to accept requests other than response[0]s
