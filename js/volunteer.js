@@ -210,13 +210,13 @@ function checkData() {
 }
 
 function editCredentials() {
-		let currentPassword = prompt("Enter your current password", "password")
-		let newPassword = prompt("Enter your new password", "password")
-		let Email = document.getElementById('email').innerHTML
-		Email = Email.substring(7)
-		userEmail = Email
-	
-		updatePasswrod({ Email, newPassword, currentPassword })
+	let currentPassword = prompt("Enter your current password", "password")
+	let newPassword = prompt("Enter your new password", "password")
+	let Email = document.getElementById('email').innerHTML
+	Email = Email.substring(7)
+	userEmail = Email
+
+	updatePasswrod({ Email, newPassword, currentPassword })
 }
 
 async function updatePasswrod(obj) {
@@ -244,10 +244,103 @@ async function updatePasswrod(obj) {
 		})
 }
 
+async function viewReq() {
+	await supa.auth.getUser()
+		.then((response) => {
+			let userEmail = response.data.user.email
+			console.log(userEmail)
+
+			supa
+				.from('Users')
+				.select('Role')
+				.eq('Email', userEmail)
+				.then((response) => {
+					console.log('here 1')
+					console.log(response)
+					// console.log(response.data[0].Role)
+					if (response.data[0].Role == 'Medical Volunteer') {
+						supa
+							.from('Requests')
+							.select('*')
+							.eq('Type', '{medical}')
+							.then((response) => {
+								console.log('here 2')
+								console.log(response.data)
+								let table = document.getElementById('table')
+								for (let i = 0; i < response.data.length; i++) {
+									table.innerHTML += "<tr><td>" + response.data[i].rid + "</td><td>" + response.data[i].Name + "</td><td>" + response.data[i].Email + "</td><td>" + response.data[i].Type + "</td><td>" + response.data[i].Desc + "</td><td><button class='custom-btn btn custom-link' id='acceptreq'>Accept</button></td></tr>"
+									document.getElementById('acceptreq').addEventListener('click', (event) => {
+										console.log("itterator" + i)
+										acceptReq(response.data[i-1].rid, userEmail)
+									})
+								}
+							})
+					} else {
+						supa
+							.from('Requests')
+							.select('*')
+							.neq('Type', '{medical}')
+							.then((response) => {
+								console.log('here 3')
+								console.log(response.data)
+								let table = document.getElementById('table')
+								for (let i = 0; i < response.data.length; i++) {
+									table.innerHTML += "<tr><td>" + response.data[i].rid + "</td><td>" + response.data[i].Name + "</td><td>" + response.data[i].Email + "</td><td>" + response.data[i].Type + "</td><td>" + response.data[i].Desc + "</td><td><button class='custom-btn btn custom-link' id='acceptreq'>Accept</button></td></tr>"
+									document.getElementById('acceptreq').addEventListener('click', () => {
+
+										acceptReq(response.data[i].rid, userEmail)
+									})
+								}
+							})
+					}
+				})
+
+		})
+
+}
+
+function acceptReq(rid, userEmail) {
+	supa
+		.from('Users')
+		.select('id')
+		.eq('Email', userEmail)
+		.then((response) => {
+			let id = response.data[0].id
+			console.log(id)
+			supa
+				.from('Volunteers')
+				.select('Vol_id')
+				.eq('id', id)
+				.then((response) => {
+					let vol_id = response.data[0].Vol_id
+					console.log(vol_id)
+					supa
+						.from('Request_Applications')
+						.insert([{ 'req_id': rid, 'Vol_id': vol_id, 'approved': false }])
+						.then((response) => {
+							console.log(response)
+							if (response.error == null) {
+								alert("Request Submitted")
+								setTimeout(() => {
+									window.location.href = "volunteerpage.html"
+								}, 2000)
+							} else {
+								alert("Request Submission Failed")
+							}
+						})
+				})
+		})
+
+}
+
 if (window.location.href.includes('volunteerPage.html')) {
 	changeField()
 }
 
 if (window.location.href.includes('volunteerchanges.html')) {
 	checkData()
+}
+
+if (window.location.href.includes('activerequest.html')) {
+	viewReq()
 }
