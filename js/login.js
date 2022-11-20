@@ -38,7 +38,7 @@ async function redirect(obj) {
 				window.location.href = "donorpage.html"
 			}
 			else if(response.data[0].Role === "Admin") {
-				window.location.href = "admin.html"
+				window.location.href = "adminhtml/index.html"
 			}
 			else {
 				window.location.href = "volunteerpage.html"
