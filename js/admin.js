@@ -220,7 +220,7 @@ function homePage() {
 								console.log(volunteerName)
 								console.log("inner" + volunteerDept)
 
-								reqTable.innerHTML += "<tr><td>" + volunteerId[i] + "</td><td>" + volunteerName[i] + "</td><td>" + volunteerDept[i] + "</td><td>" + requestId[i] + "</td><td>" + requestDesc[i] + "</td><td><button class='btn btn-success' onclick='accept(" + volunteerId[i] + "," + requestId[i] + ")'>Accept</button><button class='btn btn-danger'>Rject</button></td></tr>" 
+								reqTable.innerHTML += "<tr><td>" + volunteerId[i] + "</td><td>" + volunteerName[i] + "</td><td>" + volunteerDept[i] + "</td><td>" + requestId[i] + "</td><td>" + requestDesc[i] + "</td><td><button class='btn btn-success' onclick='accept(" + volunteerId[i] + "," + requestId[i] + ")'>Accept</button><button class='btn btn-danger'>Rject</button></td></tr>"
 							})
 					})
 
@@ -233,5 +233,12 @@ function homePage() {
 		})
 }
 
+function logOut() {
+	console.log('logging out')
+	client.auth.signOut()
+		.then(() => {
+			window.location.href = "/index.html"
+		})
+}
 
 homePage()
