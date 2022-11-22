@@ -107,6 +107,7 @@ function homePage() {
 			let finance = 0
 			let educational = 0
 			let legal = 0
+			let media = 0
 			for (let i = 0; i < response.data.length; i++) {
 				if (response.data[i].Role == "Admin") {
 					admin += 1
@@ -126,9 +127,12 @@ function homePage() {
 				else if (response.data[i].Role == "Legal Aid Services") {
 					legal += 1
 				}
+				else if (response.data[i].Role == "Media Management") {
+					media += 1
+				}
 			}
 			let data = {
-				labels: ["Admin", "Donor", "Medical Volunteer", "Finance Management", "Educational Volunteer", "Legal Aid Services"],
+				labels: ["Admin", "Donor", "Medical Volunteer", "Finance Management", "Educational Volunteer", "Legal Aid Services", "Media Volunteer"],
 				datasets: [{
 					label: "Users",
 					lineTension: 0.3,
@@ -142,7 +146,7 @@ function homePage() {
 					pointHoverBorderColor: "rgba(78, 115, 223, 1)",
 					pointHitRadius: 10,
 					pointBorderWidth: 2,
-					data: [admin, donor, medical, finance, educational, legal],
+					data: [admin, donor, medical, finance, educational, legal, media],
 				}],
 			};
 			let myLineChart = new Chart(document.getElementById("myAreaChart"), {

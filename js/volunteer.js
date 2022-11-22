@@ -244,6 +244,8 @@ async function updatePasswrod(obj) {
 		})
 }
 
+let requestersId = 0
+
 async function viewReq() {
 	await supa.auth.getUser()
 		.then((response) => {
@@ -262,16 +264,18 @@ async function viewReq() {
 						supa
 							.from('Requests')
 							.select('*')
-							.eq('Type', '{medical}')
 							.then((response) => {
 								console.log('here 2')
 								console.log(response.data)
 								let table = document.getElementById('table')
 								for (let i = 0; i < response.data.length; i++) {
-									table.innerHTML += "<tr><td>" + response.data[i].rid + "</td><td>" + response.data[i].Name + "</td><td>" + response.data[i].Email + "</td><td>" + response.data[i].Type + "</td><td>" + response.data[i].Desc + "</td><td><button class='custom-btn btn custom-link' id='acceptreq'>Accept</button></td></tr>"
-									document.getElementById('acceptreq').addEventListener('click', (event) => {
-										console.log("itterator" + i)
-										acceptReq(response.data[i-1].rid, userEmail)
+									table.innerHTML += "<tr><td>" + response.data[i].rid + "</td><td>" + response.data[i].Name + "</td><td>" + response.data[i].Email + "</td><td>" + response.data[i].Type + "</td><td>" + response.data[i].Desc + "</td><td> <input type='checkbox' id='check" + i + "'></td></tr>"
+									document.getElementById('acceptbtn').addEventListener('click', () => {
+										for (let j = 0; j < response.data.length; j++) {
+											if (document.getElementById('check' + j).checked == true) {
+												acceptReq(response.data[j].rid, userEmail)
+											}
+										}
 									})
 								}
 							})
@@ -285,10 +289,14 @@ async function viewReq() {
 								console.log(response.data)
 								let table = document.getElementById('table')
 								for (let i = 0; i < response.data.length; i++) {
-									table.innerHTML += "<tr><td>" + response.data[i].rid + "</td><td>" + response.data[i].Name + "</td><td>" + response.data[i].Email + "</td><td>" + response.data[i].Type + "</td><td>" + response.data[i].Desc + "</td><td><button class='custom-btn btn custom-link' id='acceptreq'>Accept</button></td></tr>"
-									document.getElementById('acceptreq').addEventListener('click', () => {
-
-										acceptReq(response.data[i].rid, userEmail)
+									table.innerHTML += "<tr><td>" + response.data[i].rid + "</td><td>" + response.data[i].Name + "</td><td>" + response.data[i].Email + "</td><td>" + response.data[i].Type + "</td><td>" + response.data[i].Desc + "</td><td> <input type='checkbox' id='check" + i + "'></td></tr>"
+									// on button click of acceptbtn check which checkbox is checked and send them to acceptReq function one by one
+									document.getElementById('acceptbtn').addEventListener('click', () => {
+										for (let j = 0; j < response.data.length; j++) {
+											if (document.getElementById('check' + j).checked == true) {
+												acceptReq(response.data[j].rid, userEmail)
+											}
+										}
 									})
 								}
 							})
@@ -297,6 +305,11 @@ async function viewReq() {
 
 		})
 
+}
+
+function test() {
+	console.log("itterator")
+	console.log(1, 2)
 }
 
 function acceptReq(rid, userEmail) {
@@ -318,14 +331,18 @@ function acceptReq(rid, userEmail) {
 						.from('Request_Applications')
 						.insert([{ 'req_id': rid, 'Vol_id': vol_id, 'approved': false }])
 						.then((response) => {
-							console.log(response)
+							console.log(response.error)
 							if (response.error == null) {
 								alert("Request Submitted")
 								setTimeout(() => {
 									window.location.href = "volunteerpage.html"
 								}, 2000)
 							} else {
-								alert("Request Submission Failed")
+								if (response.error.code == "23505") {
+									// do nothing
+								} else {
+									alert("Request Submission Failed")
+								}
 							}
 						})
 				})
