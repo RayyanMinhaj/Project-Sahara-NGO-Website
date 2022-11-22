@@ -221,8 +221,6 @@ function homePage() {
 								console.log("inner" + volunteerDept)
 
 								reqTable.innerHTML += "<tr><td>" + volunteerId[i] + "</td><td>" + volunteerName[i] + "</td><td>" + volunteerDept[i] + "</td><td>" + requestId[i] + "</td><td>" + requestDesc[i] + "</td><td><button class='btn btn-success' onclick='accept(" + volunteerId[i] + "," + requestId[i] + ")'>Accept</button><button class='btn btn-danger'>Rject</button></td></tr>" 
-								// add a accept reject button
-								reqTable.innerHTML += ""
 							})
 					})
 
