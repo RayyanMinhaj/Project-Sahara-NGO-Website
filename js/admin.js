@@ -64,7 +64,7 @@ function homePage() {
 					flood += response.data[i].amount
 				}
 				else if (response.data[i].cause == "Medical Supplies") {
-					medical += response.data[i].amount 
+					medical += response.data[i].amount
 				}
 				else if (response.data[i].cause == "Educational Supplies") {
 					educational += response.data[i].amount
@@ -88,11 +88,11 @@ function homePage() {
 					maintainAspectRatio: false,
 					responsive: true,
 					legend: {
-					  display: true
+						display: true
 					},
 					cutoutPercentage: 80,
-				  },
-				})
+				},
+			})
 			myPieChart.update()
 		})
 
@@ -178,35 +178,62 @@ function homePage() {
 			})
 			myLineChart.update()
 		})
-	
-	// fill the table with id reqapp with {Volunteer Id, Volunteer Name, Volunteer Department, Request ID, Request Description} and a accept or reject button
+
+	let reqTable = document.getElementById('reqappbody')
+	let volunteerId = []
+	let volunteerDept = []
+	let requestId = []
+	let requestDesc = []
+	let volunteerName = []
+
 	client
-		.from('Volunteer')
-		.select('Vol_id, id, Department')
-		.then((response) => {
+		.from('Request_Applications')
+		.select('req_id,Vol_id')
+		.then(response => {
+			size = response.data.length
 			for (let i = 0; i < response.data.length; i++) {
+				volunteerId.push(response.data[i].Vol_id)
+				requestId.push(response.data[i].req_id)
+
 				client
 					.from('Requests')
-					.select('Req_id, Req_desc')
-					.eq('Vol_id', response.data[i].Vol_id)
-					.then((response1) => {
-						for (let j = 0; j < response1.data.length; j++) {
-							$('#reqapp').append(`
-							<tr>
-								<td>${response.data[i].Vol_id}</td>
-								<td>${response.data[i].id}</td>
-								<td>${response.data[i].Department}</td>
-								<td>${response1.data[j].Req_id}</td>
-								<td>${response1.data[j].Req_desc}</td>
-								<td><button class="btn btn-success" id="accept">Accept</button></td>
-								<td><button class="btn btn-danger" id="reject">Reject</button></td>
-							</tr>
-							`)
-						}
+					.select('Desc')
+					.eq('rid', response.data[i].req_id)
+					.then(response => {
+						requestDesc.push(response.data[0].Desc)
 					})
+
+				client
+					.from('Volunteers')
+					.select('id,Department')
+					.eq('Vol_id', response.data[i].Vol_id)
+					.then(response => {
+						// console.log(response.error)
+						volunteerDept.push(response.data[0].Department)
+						console.log(volunteerDept)
+						client
+							.from('Users')
+							.select('First_Name,Last_Name')
+							.eq('id', response.data[0].id)
+							.then(response => {
+								volunteerName.push(response.data[0].First_Name + " " + response.data[0].Last_Name)
+								console.log(volunteerName)
+								console.log("inner" + volunteerDept)
+
+								reqTable.innerHTML += "<tr><td>" + volunteerId[i] + "</td><td>" + volunteerName[i] + "</td><td>" + volunteerDept[i] + "</td><td>" + requestId[i] + "</td><td>" + requestDesc[i] + "</td><td><button class='btn btn-success' onclick='accept(" + volunteerId[i] + "," + requestId[i] + ")'>Accept</button><button class='btn btn-danger'>Rject</button></td></tr>" 
+								// add a accept reject button
+								reqTable.innerHTML += ""
+							})
+					})
+
+
 			}
+
+			// for (let i = 0; i < response.data.length; i++) {
+			// 	console.log('doing that table shiz ' + i)
+			// }
 		})
-	
 }
+
 
 homePage()
