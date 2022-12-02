@@ -140,19 +140,22 @@ async function signup() {
 		const phone = formData.get("phone")
 		const position = formData.get("subject")
 
-		client
-			.from('Users')
-			.select('Email')
-			.eq('Email', email)
-			.then((response) => {
-				if (response.data.length > 0) {
-					alert("Email already exists")
-					setTimeout(() => {
-						window.location.href = "login.html"
-					}, 3000)
-					return false
-				}
-			})
+		// client
+		// 	.from('Users')
+		// 	.select('Email')
+		// 	.eq('Email', email)
+		// 	.then((response) => {
+		// 		if (response.data.length > 0) {
+
+		// 			console.log(response.data)
+					
+		// 			alert("Email already exists")
+		// 			// setTimeout(() => {
+		// 			// 	window.location.href = "login.html"
+		// 			// }, 3000)
+		// 			return false
+		// 		}
+		// 	})
 
 		if (password == password2) {
 			const filler = {
