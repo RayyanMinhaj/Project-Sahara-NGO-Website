@@ -1,10 +1,10 @@
-const client = init();
+const client = init()
 
 function init() {
 	return supabase.createClient(
 		'https://zjesbzduygemrdprcvvq.supabase.co',
 		'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpqZXNiemR1eWdlbXJkcHJjdnZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjQ5OTUyNDMsImV4cCI6MTk4MDU3MTI0M30.wtkQQpQMKYsjYyxG8PA4bcGY5OHEcVaywHuAYoIQLh0'
-	);
+	)
 }
 
 function homePage() {
@@ -80,7 +80,7 @@ function homePage() {
 					backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#00FF00"],
 					hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#00FF00"]
 				}]
-			};
+			}
 			let myPieChart = new Chart(document.getElementById("myPieChart"), {
 				type: 'pie',
 				data: data,
@@ -148,7 +148,7 @@ function homePage() {
 					pointBorderWidth: 2,
 					data: [admin, donor, medical, finance, educational, legal, media],
 				}],
-			};
+			}
 			let myLineChart = new Chart(document.getElementById("myAreaChart"), {
 				type: 'line',
 				data: data,
@@ -183,12 +183,17 @@ function homePage() {
 			myLineChart.update()
 		})
 
+	generateTable()
+}
+
+function generateTable() {
 	let reqTable = document.getElementById('reqappbody')
 	let volunteerId = []
 	let volunteerDept = []
 	let requestId = []
 	let requestDesc = []
 	let volunteerName = []
+	let assigned = []
 
 	client
 		.from('Request_Applications')
@@ -208,6 +213,14 @@ function homePage() {
 					})
 
 				client
+					.from('Requests')
+					.select('Assigned')
+					.eq('rid', response.data[i].req_id)
+					.then(response => {
+						assigned.push(response.data[0].Assigned)
+					})
+
+				client
 					.from('Volunteers')
 					.select('id,Department')
 					.eq('Vol_id', response.data[i].Vol_id)
@@ -223,17 +236,69 @@ function homePage() {
 								volunteerName.push(response.data[0].First_Name + " " + response.data[0].Last_Name)
 								console.log(volunteerName)
 								console.log("inner" + volunteerDept)
-
-								reqTable.innerHTML += "<tr><td>" + volunteerId[i] + "</td><td>" + volunteerName[i] + "</td><td>" + volunteerDept[i] + "</td><td>" + requestId[i] + "</td><td>" + requestDesc[i] + "</td><td><button class='btn btn-success' onclick='accept(" + volunteerId[i] + "," + requestId[i] + ")'>Accept</button><button class='btn btn-danger'>Rject</button></td></tr>"
+								if (assigned[i] == false) {
+									reqTable.innerHTML += "<tr><td>" + volunteerId[i] + "</td><td>" + volunteerName[i] + "</td><td>" + volunteerDept[i] + "</td><td>" + requestId[i] + "</td><td>" + requestDesc[i] + "</td><td><button class='btn btn-success' onclick='accept( " + volunteerId[i] + "," + requestId[i] + "," +")'>Accept</button><button class='btn btn-danger' onclick='reject( " + volunteerId[i] + "," + requestId[i] + "," +")'>Reject</button></td></tr>"
+								}
 							})
 					})
 
 
 			}
 
-			// for (let i = 0; i < response.data.length; i++) {
-			// 	console.log('doing that table shiz ' + i)
-			// }
+		})
+}
+
+function accept(volId, reqId) {
+	// console.log("accept")
+	client
+		.from('Requests')
+		.update({
+			'Assigned': true
+		})
+		.eq('rid', reqId)
+		.then(response => {
+			console.log(response.error)
+		})
+	
+	client
+		.from('Request_Applications')
+		.update({
+			'approved': true
+		})
+		.eq('req_id', reqId)
+		.then(response => {
+			console.log(response.error)
+		})
+	
+	client
+		.from('Requests')
+		.select('Desc')
+		.eq('rid', reqId)
+		.then(response => {
+			console.log(response.error)
+			let desc = response.data[0].Desc
+			client
+				.from('Volunteers')
+				.update({
+					'Duty': desc
+				})
+				.eq('Vol_id', volId)
+				.then(response => {
+					console.log(response.error)
+				})
+		})
+	
+}
+
+function reject(volId, reqId) {
+	client
+		.from('Request_Applications')
+		.delete()
+		.eq('req_id', reqId)
+		.eq('Vol_id', volId)
+		.then(response => {
+			console.log(response.error)
+			console.log("rejecting" + volId + " " + reqId)
 		})
 }
 
