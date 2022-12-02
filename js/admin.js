@@ -183,29 +183,42 @@ function homePage() {
 			myLineChart.update()
 		})
 
-	let reqTable = document.getElementById('reqappbody')
-	let volunteerId = []
-	let volunteerDept = []
-	let requestId = []
-	let requestDesc = []
-	let volunteerName = []
+	generateTable();
+}
+
+function generateTable() {
+	let reqTable = document.getElementById('reqappbody');
+	let volunteerId = [];
+	let volunteerDept = [];
+	let requestId = [];
+	let requestDesc = [];
+	let volunteerName = [];
+	let assigned = [];
 
 	client
 		.from('Request_Applications')
 		.select('req_id,Vol_id')
 		.then(response => {
-			size = response.data.length
+			size = response.data.length;
 			for (let i = 0; i < response.data.length; i++) {
-				volunteerId.push(response.data[i].Vol_id)
-				requestId.push(response.data[i].req_id)
+				volunteerId.push(response.data[i].Vol_id);
+				requestId.push(response.data[i].req_id);
 
 				client
 					.from('Requests')
 					.select('Desc')
 					.eq('rid', response.data[i].req_id)
 					.then(response => {
-						requestDesc.push(response.data[0].Desc)
-					})
+						requestDesc.push(response.data[0].Desc);
+					});
+
+				client
+					.from('Requests')
+					.select('Assigned')
+					.eq('rid', response.data[i].req_id)
+					.then(response => {
+						assigned.push(response.data[0].Assigned);
+					});
 
 				client
 					.from('Volunteers')
@@ -213,28 +226,68 @@ function homePage() {
 					.eq('Vol_id', response.data[i].Vol_id)
 					.then(response => {
 						// console.log(response.error)
-						volunteerDept.push(response.data[0].Department)
-						console.log(volunteerDept)
+						volunteerDept.push(response.data[0].Department);
+						console.log(volunteerDept);
 						client
 							.from('Users')
 							.select('First_Name,Last_Name')
 							.eq('id', response.data[0].id)
 							.then(response => {
-								volunteerName.push(response.data[0].First_Name + " " + response.data[0].Last_Name)
-								console.log(volunteerName)
-								console.log("inner" + volunteerDept)
-
-								reqTable.innerHTML += "<tr><td>" + volunteerId[i] + "</td><td>" + volunteerName[i] + "</td><td>" + volunteerDept[i] + "</td><td>" + requestId[i] + "</td><td>" + requestDesc[i] + "</td><td><button class='btn btn-success' onclick='accept(" + volunteerId[i] + "," + requestId[i] + ")'>Accept</button><button class='btn btn-danger'>Rject</button></td></tr>"
-							})
-					})
+								volunteerName.push(response.data[0].First_Name + " " + response.data[0].Last_Name);
+								console.log(volunteerName);
+								console.log("inner" + volunteerDept);
+								if (assigned[i] == false) {
+									reqTable.innerHTML += "<tr><td>" + volunteerId[i] + "</td><td>" + volunteerName[i] + "</td><td>" + volunteerDept[i] + "</td><td>" + requestId[i] + "</td><td>" + requestDesc[i] + "</td><td><button class='btn btn-success' onclick='accept( " + volunteerId[i] + "," + requestId[i] + "," +")'>Accept</button><button class='btn btn-danger' onclick='reject()'>Rject</button></td></tr>";
+								}
+							});
+					});
 
 
 			}
 
-			// for (let i = 0; i < response.data.length; i++) {
-			// 	console.log('doing that table shiz ' + i)
-			// }
+		});
+}
+
+function accept(volId, reqId) {
+	// console.log("accept");
+	client
+		.from('Requests')
+		.update({
+			'Assigned': true
 		})
+		.eq('rid', reqId)
+		.then(response => {
+			console.log(response.error);
+		});
+	
+	client
+		.from('Request_Applications')
+		.update({
+			'approved': true
+		})
+		.eq('req_id', reqId)
+		.then(response => {
+			console.log(response.error);
+		})
+	
+	client
+		.from('Requests')
+		.select('Desc')
+		.eq('rid', reqId)
+		.then(response => {
+			console.log(response.error)
+			let desc = response.data[0].Desc
+			client
+				.from('Volunteers')
+				.update({
+					'Duty': desc
+				})
+				.eq('Vol_id', volId)
+				.then(response => {
+					console.log(response.error)
+				})
+		})
+	
 }
 
 function logOut() {
